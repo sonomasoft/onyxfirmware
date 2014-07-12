@@ -3,12 +3,12 @@
  */
 
 /*
- * Define memory spaces.
+ * Define memory spaces.  moved rom length from 492k to 496k (TODO: MAKE SURE WE ADJUST LOG SPACE!)
  */
 MEMORY
 {
   ram (rwx) : ORIGIN = 0x20000C00, LENGTH = 45K
-  rom (rx)  : ORIGIN = 0x08000000, LENGTH = 492K
+  rom (rx)  : ORIGIN = 0x08000000, LENGTH = 496K
 }
 
 /*

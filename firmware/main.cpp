@@ -50,9 +50,20 @@ int main(void) {
 
     power_initialise();
 
-    if(power_battery_level()<2){
 
-	g.initialise(); // this will set up our timer so we wake up on sleep
+
+
+
+   buzzer_initialise();
+   buzzer_nonblocking_buzz(0.1);   // for debug
+
+    if(power_battery_level()<20){  // was 20
+
+	 g.initialise(); // this will set up our timer so we wake up on sleep
+
+
+        // turn off cap touch
+        cap_deinit();
 
 	slowClocks();
 
@@ -64,8 +75,8 @@ int main(void) {
                   // request wait for interrupt (in-line assembly)
 
 
-				  volatile uint32_t *pwr_cr = (uint32_t *) 0x40007000; //ok
-				  volatile uint32_t *pwr_csr = (uint32_t *) 0x40007004; //ok
+				 // volatile uint32_t *pwr_cr = (uint32_t *) 0x40007000; //ok
+				  //volatile uint32_t *pwr_csr = (uint32_t *) 0x40007004; //ok
 				  volatile uint32_t *scb_scr = (uint32_t *) 0xE000ED10; //ok
 
 
@@ -82,7 +93,18 @@ int main(void) {
 
 
 
-	  }while(power_battery_level()<5);
+/*
+		if(power_battery_level()<15){
+		        // turn iRover off
+        		g.powerdown();
+			
+
+			power_deinit();
+                 }
+
+*/
+
+	  }while(power_battery_level()<50);  // was 25
     // issue reset
 
 
@@ -95,11 +117,11 @@ int main(void) {
 
     serial_initialise();
     flashstorage_initialise();
-    buzzer_initialise();
+    //buzzer_initialise();
     realtime_initialise();
     g.initialise();
     switch_initialise();
-    accel_init();
+    //accel_init();
 
 
 
@@ -128,7 +150,11 @@ int main(void) {
     uint8_t *private_key = ((uint8_t *) &_binary___binary_data_private_key_data_start);
     if(private_key[0] != 0) delay_us(1000);
 
+
+
+
     delay_us(10000);  // can be removed?
+
 
     // if we woke up on an alarm, we're going to be sending the system back.
     #ifndef NEVERSLEEP
@@ -198,8 +224,24 @@ int main(void) {
      */
     for(;;) {
 
-      if(power_battery_level() < 1) {
-        power_standby();
+      if(power_battery_level() < 25) {  // was 1
+
+
+	rtc_clear_alarmed();
+        
+	rtc_disable_alarm(RTC);
+       
+        // turn iRover off
+        g.powerdown();
+
+       // turn off cap touch
+       cap_deinit();
+
+        // turn off all interrupts and go into power_standby
+	power_deinit();
+
+
+
       }
 
       c.update();

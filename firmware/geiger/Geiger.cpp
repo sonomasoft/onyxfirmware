@@ -527,7 +527,24 @@ void  Geiger::set_becquerel_eff(float c) {
 }
 
 void Geiger::powerup  () {}
-void Geiger::powerdown() {}
+void Geiger::powerdown() {
+
+dac_disable_channel(DAC,DAC_CH1);
+
+dac_disable_channel(DAC,DAC_CH2);
+
+// reduce current by shutting down outputs
+// remove dc from DAC out
+gpio_set_mode (PIN_MAP[13].gpio_device,PIN_MAP[13].gpio_bit,GPIO_OUTPUT_PP);
+gpio_write_bit(PIN_MAP[13].gpio_device,PIN_MAP[13].gpio_bit,0);
+
+ gpio_write_bit(PIN_MAP[MIC_IPHONE].gpio_device,PIN_MAP[MIC_IPHONE].gpio_bit,0);
+
+ gpio_write_bit(PIN_MAP[GEIGER_ON_GPIO].gpio_device,PIN_MAP[GEIGER_ON_GPIO].gpio_bit,0);
+
+ gpio_write_bit(PIN_MAP[BUZZER_PWM].gpio_device,PIN_MAP[BUZZER_PWM].gpio_bit,0);
+
+}
 
 void Geiger::enable_micout() {
   mic_output=true;

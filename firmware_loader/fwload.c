@@ -115,7 +115,9 @@ if( need_write ) {
       FT_Close(ftHandle0);
       return 1;
     }
-    printf( "------> Now that the EEPROM is updated, unplug and replug the device.\n" );
+    printf( "------> Now that the EEPROM is updated, unplug and replug the device.  Then re-run program\n" );
+
+    exit( 1 );
   } else {
     printf( "EEPROM values are up to date, not modifying them\n" );
   }

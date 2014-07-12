@@ -193,6 +193,7 @@ uint32_t  _get_CONTROL()
 void power_standby(void) {
 
   // ensure display is shutdown
+  gpio_write_bit(PIN_MAP[LED_PWR_ENA_GPIO].gpio_device,PIN_MAP[LED_PWR_ENA_GPIO].gpio_bit,0);
 
   adc_foreach(adc_disable);
   timer_foreach(timer_disable);
@@ -221,8 +222,10 @@ void power_standby(void) {
   *pwr_csr |= (uint16_t) 256; // EWUP (enable wakeup)
   *pwr_cr |= (uint8_t) 0x06; //PWR_CR_PDDS); // set PDDS
 
+  // *pwr_cr &= (uint8_t) ~0x02;  // for stop mode - clear pdds
+
   uint32_t temp = *pwr_cr;
-  temp |= 6;
+  temp |= 6;  
   *pwr_cr = temp;
   *pwr_cr |= (uint16_t) 0x04; //PWR_CSR_WUF; // clear WUF
 
@@ -246,6 +249,14 @@ void power_standby(void) {
 
 }
 
+
+
+
+
+
+
+
+
 void power_wfi(void) {
   // request wait for interrupt (in-line assembly)
   asm volatile (
@@ -257,7 +268,28 @@ void power_wfi(void) {
 int power_deinit(void) {
   // disable wake on interrupt
   PWR_BASE->CSR &= ~PWR_CSR_EWUP;
+
+  // make sure hall effect sensor is off
+  gpio_write_bit(PIN_MAP[MAGPOWER_GPIO].gpio_device,PIN_MAP[MAGPOWER_GPIO].gpio_bit,0);
+
+  // DAC Hack
+   gpio_write_bit(PIN_MAP[LIMIT_VREF_DAC].gpio_device,PIN_MAP[LIMIT_VREF_DAC].gpio_bit,0);
+
   power_standby();
+
+
+
+
+
+
+  // should never get here - manual beeps for debugging if we do.
+  for(int i=0;i<11;i++) {
+    for(int n=0;n<100;n++) {
+      gpio_toggle_bit(GPIOB,9);
+      delay_us(1000);
+    }
+    delay_us(100000);
+  }
   return 0;
 }
 

@@ -2,7 +2,7 @@
 #define MPR121_H
 //MPR121.h - MPR121 Captouch sensor register definitions
 //April 8, 2010
-//by: Jim Lindblom, modifications by Nava Whiteford and others.
+//by: Jim Lindblom, modifications by Nava Whiteford, Lee Henderson and others.
 
 // Touch state registers
 #define TCH_STATL 0x00
@@ -33,6 +33,8 @@
 #define ATO_CFGU  0x7D // Up-side limit register
 #define ATO_CFGL  0x7E // Low-side limit register
 #define ATO_CFGT  0x7F // Target level reigster
+#define SFT_RST   0X80 // Soft Reset register
+
 
 //GPIO Reigsters
 #define GPIO_CTRL0 0x73

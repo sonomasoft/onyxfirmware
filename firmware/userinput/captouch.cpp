@@ -355,6 +355,7 @@ void cap_deinit(void) {
 
   // Disable MPR121 scanning, in case the chip is on
   mpr121Write(ELE_CFG, 0x00);
+  mpr121Write(SFT_RST, 0x63); // send softreset to put IC in low power state.
 
   return;
 }
