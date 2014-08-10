@@ -35,7 +35,8 @@ Controller::Controller() {
 
   m_sleeping=false;
   m_powerup=false;
-  m_log_interval_seconds = 60*30;
+  //m_log_interval_seconds = 60*30;
+  m_log_interval_seconds = 0;  // default set to zero to save power
   rtc_clear_alarmed();
   rtc_enable_alarm(RTC);
   m_interval_stored = rtc_get_time(RTC);
@@ -82,7 +83,8 @@ Controller::Controller() {
     sscanf(sloginter, "%"PRIu32"", &c);
     m_log_interval_seconds = c;
   } else {
-    m_log_interval_seconds = 30*60;
+   // m_log_interval_seconds = 30*60;
+    m_log_interval_seconds = 0;  // default set to zero to save power
   }
   rtc_set_alarm(RTC,rtc_get_time(RTC)+m_log_interval_seconds);
 }
@@ -480,7 +482,8 @@ void Controller::event_loginterval(const char *event,const char *value) {
     if (val != NULL) {
       sscanf(val,"%"PRIi32"",&log_interval);
     } else {
-      log_interval = 30*60;
+      //log_interval = 30*60;
+      log_interval = 0; // default to save power
     }
 
     log_interval = log_interval/60; // Turn it into minutes

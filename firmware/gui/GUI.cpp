@@ -660,7 +660,15 @@ void render_battery(int x,int y,int level,int charging) {
   uint16 image_data[384]; // 24*16
 
   // only move bat level, if there's a big difference to prevent flickering.
-  level = (((float) level)/100)*23;
+  //level = (((float) level)/100)*23;
+  // rescale level based upon our new shut-down level of 25%
+   
+   int lfactor;
+   lfactor = level - ((100 - level)/3);
+
+   level = (((float) lfactor)/100)*23;
+
+
   uint16 level_delta = level-last_batlevel;
   if(level_delta < 0) level_delta = 0-level_delta;
   if(level_delta <= 1) level = last_batlevel;
