@@ -1,4 +1,10 @@
 
+changes for 12.20.05   8.10.14
+* Rescale battery meter for new cutt-off
+* set default logging interval to 0
+
+
+
 Changes for 12.18  Lee Henderson (Medcom)  5.28.14
 
 * Prevent OLED from initilizing below 3.2V.  If battery voltage is below 3.2V, clocks are slowed down until battery voltage is greater than 3.2V.  At this point a master reset is generated and the unit will restart.
