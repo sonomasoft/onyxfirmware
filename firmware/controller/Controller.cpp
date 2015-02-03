@@ -190,7 +190,13 @@ void Controller::save_loginterval() {
   sprintf(sloginterval,"%"PRIu32"",m_log_interval_seconds);
   flashstorage_keyval_set("LOGINTERVAL",sloginterval);
   uint32_t current_time = realtime_get_unixtime();
+
+if(m_log_interval_seconds > 0){
   rtc_set_alarm(RTC,current_time+m_log_interval_seconds);
+}else{
+     rtc_disable_alarm(RTC);
+}
+
   m_gui->jump_to_screen(0);
 
 }
@@ -1058,7 +1064,10 @@ void Controller::update() {
   check_warning_level();
   m_keytrigger=false;
 
-  do_logging();
+
+  // only do_logging if we are enable
+if( m_log_interval_seconds > 0)
+    do_logging();
 
   check_sleep_switch();
 
